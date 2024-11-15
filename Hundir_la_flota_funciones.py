@@ -3,7 +3,11 @@
 import numpy as np
 import random
 
+# importar variables-constantes
+from Hundir_la_flota_constantes import coordenadas,tocado,agua
+
 ##### Función para crear el tablero #####
+# Esta función no se está utilizando
 def crear_tablero(dimension_tablero):
     tablero = np.full((dimension_tablero, dimension_tablero), " ")
     return tablero
@@ -15,7 +19,8 @@ def crear_barco(tablero, longitud_barco):
     contador = 0
     while not valido and contador < 1000:
         contador += 1
-        orientacion = random.choice(["N", "S", "E", "O"])
+        # orientacion = random.choice(["N", "S", "E", "O"])
+        orientacion = random.choice(coordenadas)
         punto_origen_fila = random.randint(0, indice_limite)
         punto_origen_columna = random.randint(0, indice_limite)
         punto_final_fila, punto_final_columna = punto_origen_fila, punto_origen_columna
@@ -33,7 +38,7 @@ def crear_barco(tablero, longitud_barco):
             punto_final_columna += longitud_barco
             punto_final_fila += 1
 
-        if all(0 <= val <= indice_limite for val in [punto_origen_fila, punto_final_fila, punto_origen_columna, punto_final_columna]) and            "O" not in tablero[punto_origen_fila:punto_final_fila, punto_origen_columna:punto_final_columna]:
+        if all(0 <= val <= indice_limite for val in [punto_origen_fila, punto_final_fila, punto_origen_columna, punto_final_columna]) and "O" not in tablero[punto_origen_fila:punto_final_fila, punto_origen_columna:punto_final_columna]:
             valido = True
             tablero[punto_origen_fila:punto_final_fila, punto_origen_columna:punto_final_columna] = "O"
 
@@ -48,13 +53,15 @@ def disparo_aleatorio(jugador_objetivo):
 
     if jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] == " ":
         print("El disparo ha caído en el agua")
-        jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = "-"
+        # jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = "-"
+        jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = agua
         jugador_objetivo.mostrar_tablero()
         return False
     elif jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] == "O":
         print("El disparo ha tocado un barco")
         jugador_objetivo.reducir_vidas()
-        jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = "X"
+        # jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = "X"
+        jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = tocado
         jugador_objetivo.mostrar_tablero()
         print("La IA dispara de nuevo.")
         return True
