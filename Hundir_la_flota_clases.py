@@ -1,7 +1,7 @@
 
 # importar librería
 import numpy as np
-from Hundir_la_flota_funciones import crear_tablero,crear_barco  # Solo importar lo necesari
+from Hundir_la_flota_funciones import crear_tablero,crear_barco  # Solo importar lo necesario
 # importar variables-constantes
 from Hundir_la_flota_constantes import tablero_dim,barcos
 
