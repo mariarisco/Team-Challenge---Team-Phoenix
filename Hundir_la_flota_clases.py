@@ -1,7 +1,7 @@
 
 # importar librería
 import numpy as np
-from Hundir_la_flota_funciones import crear_tablero  # Solo importar lo necesari
+from Hundir_la_flota_funciones import crear_tablero,crear_barco  # Solo importar lo necesari
 # importar variables-constantes
 from Hundir_la_flota_constantes import tablero_dim,barcos
 
@@ -21,7 +21,7 @@ class Jugador():
         lista_barcos = barcos 
         for barco in lista_barcos:
             for _ in range(barco[0]):
-                from Hundir_la_flota_funciones import crear_barco
+                # from Hundir_la_flota_funciones import crear_barco
                 crear_barco(tablero=tablero, longitud_barco=barco[1])
         tablero = np.vstack([np.arange(1, 11), tablero])
         tablero = np.hstack([np.arange(0, 11).reshape(11, 1), tablero])
