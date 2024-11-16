@@ -1,9 +1,12 @@
 
 # importar librería
 import numpy as np
+
+# importar funciones
 from Hundir_la_flota_funciones import crear_tablero,crear_barco  # Solo importar lo necesario
+
 # importar variables-constantes
-from Hundir_la_flota_constantes import tablero_dim,barcos
+from Hundir_la_flota_constantes import tablero_dim,barcos,tablero_barco,tablero_agua
 
 # Crear clase jugador
 class Jugador():
@@ -11,7 +14,7 @@ class Jugador():
         self.id_jugador = id_jugador
         self.tablero = self.crear_tablero_jugador()
         # Las vidas serán el número total de posiciones de barcos que se tiene inicialmente
-        self.vidas = list(self.tablero.ravel()).count("O")
+        self.vidas = list(self.tablero.ravel()).count(tablero_barco)
     
     def crear_tablero_jugador(self):
         # Definimos aquí el método crear_tablero_jugador para evitar el import circular
@@ -40,7 +43,7 @@ class Jugador():
         shape = copia.shape
         copia = list(copia.ravel())
         for index, value in enumerate(copia):
-            if value == "O":
+            if value == tablero_barco:
                 copia[index] = " "
         copia = np.array(copia).reshape(shape)
         print(copia)
