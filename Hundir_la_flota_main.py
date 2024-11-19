@@ -1,53 +1,69 @@
-# Importar clase
-from Hundir_la_flota_clases import Jugador
+import os  # Para limpiar el terminal
+import threading
 
-# Importar funciones
-from Hundir_la_flota_funciones import disparo_aleatorio, disparo_manual
+from Hundir_la_flota_clases import Jugador, Jugador_v2
+from Hundir_la_flota_funciones import disparo_aleatorio_v2,disparo_manual_v3,verificar_victoria,verificar_salida_2
 
-# Empieza el juego solicitando el nombre del jugador
-nombre_usuario = input("Introduce el nombre del jugador: ")
+"""
+Juego Hundir la Flota.
+"""
 
-# Se crean los jugadores
-jugador = Jugador(id_jugador=nombre_usuario)
-maquina = Jugador(id_jugador="IA")
+# Cuando se presione la tecla "Esc" cierra el programa. Funciona mediante la ejecución de la función verificar_salida_2 en segundo plano hasta que se pulse Esc o finaliza el programaAntonio
+hilo_esc = threading.Thread(target = verificar_salida_2, daemon = True)
+hilo_esc.start()
 
-# Se muestra el tablero del jugador
-print("Este es tu tablero:")
-jugador.mostrar_tablero()
+while True:
+    # Mostrar mensajes iniciales
+    print("\n¡Empieza la batalla naval! 🌊")
+    print("Vas a jugar contra una máquina a Hundir la flota. \nCada jugador tiene una flota de 4 barcos. \n")
+    print("Si aciertas un disparo sobre el barco de tu rival, vuelves a disparar. \nSe lanzarán disparos por turnos hasta que uno de los jugadores hunda toda la flota del rival. \n")
+    print("Suerte!")
 
-# Variable de control para el bucle del juego
-declaracion_victoria = False
+    # Configuración inicial del juego
+    nombre_usuario = input("Introduce el nombre del jugador: ")
+    jugador = Jugador(id_jugador=nombre_usuario)
+    maquina = Jugador(id_jugador="IA")
+    declaracion_victoria = False
 
-# Bucle while para jugar la partida
-while not declaracion_victoria:               
-    print("\n--- Menú ---")
-    print("1: Hacer un disparo")
-    print("2: Ver tu Tablero")
-    print("3: Ver tu historial de disparos")
-    print("4: Ver vidas del rival")
-    print("5: Ver tus vidas")
+    # Pausar para leer las instrucciones
+    input("\nPresiona Enter para comenzar el juego...")
 
-    menu = input("--> ").strip()
-    if menu == "1":
-        while disparo_manual(jugador_objetivo=maquina) and maquina.vidas > 1:
-            pass
-        print("\n---- Turno de la IA ----\n")
-        while disparo_aleatorio(jugador_objetivo=jugador) and jugador.vidas > 1:
-            pass            
-    elif menu == "2":
-        print("\nEste es tu tablero:")
+    # Bucle principal del juego
+    while not declaracion_victoria:
+        os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar terminal al inicio del bucle
+
+        print("\n--- ESTADO DEL JUEGO ---")
+        print("Tu tablero:")
         jugador.mostrar_tablero()
-    elif menu == "3":
-        print("\nHistorial de tus disparos:")
+        print("\nTus disparos sobre el rival:")
         maquina.mostrar_historial_disparos()
-    elif menu == "4":
-        print(f"\nA tu rival le quedan {maquina.vidas} vidas." if maquina.vidas > 1 else "\nA tu rival le queda una vida.")
-    elif menu == "5":
-        print(f"\nTe quedan {jugador.vidas} vidas." if jugador.vidas > 1 else "\nTe queda una vida.")
-    
-    if jugador.vidas == 0:
-        print("\nNo te quedan más barcos. Has perdido")
-        declaracion_victoria = True
-    elif maquina.vidas == 0:
-        print("\n¡Has hundido todos los barcos del rival! ¡Victoria!")
-        declaracion_victoria = True
+        print(f"\nTus vidas: {jugador.vidas} | Vidas del rival: {maquina.vidas}")
+
+        print("\n--- TU TURNO ---")
+        while disparo_manual_v3(jugador_objetivo=maquina) and maquina.vidas > 0:
+            # print("Tu disparo fue acertado. Aquí está el historial actualizado.")
+            continue
+
+        declaracion_victoria = verificar_victoria(jugador, maquina)
+        if declaracion_victoria:
+            break
+
+        print("\n--- TURNO DE LA MÁQUINA ---")
+        while disparo_aleatorio_v2(jugador_objetivo=jugador) and jugador.vidas > 0:
+            continue
+
+        declaracion_victoria = verificar_victoria(jugador, maquina)
+
+        # # Preguntar al jugador si quiere seguir jugando
+        # print("\n¿Quieres seguir jugando? (s/n)")
+        # continuar = input("--> ").strip().lower()
+        # if continuar == 'n':
+        #     print("\nGracias por jugar. ¡Hasta la próxima! 😊")
+        #     break
+        # elif continuar != 's':
+        #     print("\nOpción inválida. Por favor, responde con 's' para sí o 'n' para no.")
+        #     continue  # Vuelve a preguntar si la entrada es inválida
+
+
+
+
