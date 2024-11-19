@@ -1,5 +1,6 @@
 
 # Importar librerías
+import os
 import numpy as np
 import random
 
@@ -65,19 +66,75 @@ def disparo_aleatorio(jugador_objetivo):
 
 ##### Función disparo manual #####
 def disparo_manual(jugador_objetivo):
+    
+    #Creamos esta variable para que entre en bucle. Despues la pasamos a True para salir. 
+    #Solo se vuelve False y repite el bucle si el usuario dispara en una celda donde ya disparó
+    #Ver ultimo if de esta funcion
     disparo_correcto = False
-    while not disparo_correcto:
+    while disparo_correcto == False:
         disparo_correcto = True
-        coordenada_fila_disparo = int(input("Coordenada fila (1-10): "))
-        coordenada_columna_disparo = int(input("Coordenada columna (1-10): "))
-        if jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] == tablero_agua:
-            print("El disparo ha caído en el agua")
-            jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = agua
+
+        check_flag = False
+        while check_flag == False:
+
+            #Primero comprobamos que no se introducen "Floats"
+            coordenada_fila_disparo = input("Coordenada fila (1-10): ")
+            while "," in coordenada_fila_disparo or "." in coordenada_fila_disparo:
+                input("Coordenada incorrecta. Introduzca de nuevo. \nCoordenada fila: ")
+            
+            try:
+                coordenada_fila_disparo = int(coordenada_fila_disparo)
+                if 1 <= coordenada_fila_disparo <= 10:
+                    check_flag = True
+                else:
+                    print("Coordenada fuera de los límites. Introduzca de nuevo.\n")
+            except:
+                print("Coordenada incorrecta. Introduzca de nuevo")
+            
+        check_flag = False
+        while check_flag == False:
+
+            #Primero comprobamos que no se introducen "Floats"
+            coordenada_columna_disparo = input("Coordenada columna (1-10): ")
+            while "," in coordenada_columna_disparo or "." in coordenada_columna_disparo:
+                input("Coordenada incorrecta. Introduzca de nuevo. \nCoordenada columna: ")
+            
+            try:
+                coordenada_columna_disparo = int(coordenada_columna_disparo)
+                if 1 <= int(coordenada_columna_disparo) <= 10:
+                    check_flag = True
+                else:
+                    print("Coordenada fuera de los límites. Introduzca de nuevo.\n")           
+            except:
+                print("Coordenada incorrecta. Introduzca de nuevo")
+                
+        #Si la coordenada coincide con una celda vacia, caerá en el agua
+        if jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] == " ":
+            print("El disparo ha caido en el agua \n")
+            jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] = "-"
             jugador_objetivo.mostrar_historial_disparos()
+
             return False
-        elif jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] == tablero_barco:
-            print("El disparo ha tocado un barco")
+        
+        #Si coincide con una celda llena, caerá en un barco
+        elif jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] == "O":
+            print("El disparo ha tocado un barco \n")
             jugador_objetivo.reducir_vidas()
-            jugador_objetivo.tablero[coordenada_fila_disparo, coordenada_columna_disparo] = tocado
+            jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] = "X"
             jugador_objetivo.mostrar_historial_disparos()
+            print("Dispara de nuevo. \n")
+
             return True
+        
+        elif jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] == "-" or jugador_objetivo.tablero[coordenada_fila_disparo,coordenada_columna_disparo] == "X":
+            print("Ya se ha disparado en esa celda. Prueba de nuevo \n")
+            jugador_objetivo.mostrar_historial_disparos()
+            disparo_correcto = False
+
+
+#### Funcion para limpiar la consola de salida
+def limpiar_pantalla():
+    if os.name == 'nt':  # Windows
+        os.system('cls')
+    else:  # macOS y Linux
+        os.system('clear')

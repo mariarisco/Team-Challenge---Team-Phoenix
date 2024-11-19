@@ -2,7 +2,7 @@
 from Hundir_la_flota_clases import Jugador
 
 # Importar funciones
-from Hundir_la_flota_funciones import disparo_aleatorio, disparo_manual
+from Hundir_la_flota_funciones import disparo_aleatorio, disparo_manual, limpiar_pantalla
 
 # Empieza el juego solicitando el nombre del jugador
 nombre_usuario = input("Introduce el nombre del jugador: ")
@@ -19,35 +19,64 @@ jugador.mostrar_tablero()
 declaracion_victoria = False
 
 # Bucle while para jugar la partida
-while not declaracion_victoria:               
-    print("\n--- Menú ---")
-    print("1: Hacer un disparo")
-    print("2: Ver tu Tablero")
-    print("3: Ver tu historial de disparos")
-    print("4: Ver vidas del rival")
-    print("5: Ver tus vidas")
+while declaracion_victoria == False:
+                
+        valid_options = ["1","2","3","4","5"]
+        print("\n---Menu---")
+        print("Introduce 1 para hacer un disparo")
+        print("Introduce 2 para ver tu Tablero")
+        print("Introduce 3 para ver tu historial de disparos (Tablero rival)")
+        print("Introduce 4 para ver el numero de vidas del rival")
+        print("Introduce 5 para ver tus vidas\n")
+        menu = input("--> ").strip()
+        limpiar_pantalla()
+        
+        while menu not in valid_options:
+            print("Opcion introducida no valida.\n")
+            print("\n---Menu---")
+            print("Introduce 1 para hacer un disparo")
+            print("Introduce 2 para ver tu Tablero")
+            print("Introduce 3 para ver tu historial de disparos")
+            print("Introduce 4 para ver el numero de vidas del rival")
+            print("Introduce 5 para ver tus vidas\n")
+            menu = input("--> ").strip()
+            limpiar_pantalla()
+            
+        if menu == "1":
+            while disparo_manual(jugador_objetivo=maquina) == True and maquina.vidas > 1:
+                pass
 
-    menu = input("--> ").strip()
-    if menu == "1":
-        while disparo_manual(jugador_objetivo=maquina) and maquina.vidas > 1:
-            pass
-        print("\n---- Turno de la IA ----\n")
-        while disparo_aleatorio(jugador_objetivo=jugador) and jugador.vidas > 1:
-            pass            
-    elif menu == "2":
-        print("\nEste es tu tablero:")
-        jugador.mostrar_tablero()
-    elif menu == "3":
-        print("\nHistorial de tus disparos:")
-        maquina.mostrar_historial_disparos()
-    elif menu == "4":
-        print(f"\nA tu rival le quedan {maquina.vidas} vidas." if maquina.vidas > 1 else "\nA tu rival le queda una vida.")
-    elif menu == "5":
-        print(f"\nTe quedan {jugador.vidas} vidas." if jugador.vidas > 1 else "\nTe queda una vida.")
-    
-    if jugador.vidas == 0:
-        print("\nNo te quedan más barcos. Has perdido")
-        declaracion_victoria = True
-    elif maquina.vidas == 0:
-        print("\n¡Has hundido todos los barcos del rival! ¡Victoria!")
-        declaracion_victoria = True
+            print("\n----Turno de la IA----\n")
+            while disparo_aleatorio(jugador_objetivo=jugador) == True and jugador.vidas >1:
+                pass
+            
+            print()
+
+        elif menu == "2":
+            print("\nEste es tu tablero: \n")
+            jugador.mostrar_tablero()
+            print()
+        
+        elif menu == "3":
+            print("\nEste es el historial de tus disparos: \n")
+            maquina.mostrar_historial_disparos()
+            print()
+        
+        elif menu == "4":
+            if maquina.vidas > 1:
+                print(f"\nA tu rival le quedan {maquina.vidas} vidas.\n")
+            if maquina.vidas == 1:
+                print(f"\nA tu rival le queda una (1) vida.\n")
+        
+        elif menu =="5":
+            if jugador.vidas > 1:
+                print(f"\nTe quedan {maquina.vidas} vidas.\n")
+            if jugador.vidas == 1:
+                print(f"\nSólo te queda una (1) vida.\n")
+        
+if jugador.vidas == 0:
+    print("\nNo te quedan más barcos. Has perdido")
+    declaracion_victoria = True
+if maquina.vidas == 0:
+    print("\n¡A tu rival no le quedan más barcos! ¡Victoria!")
+    declaracion_victoria = True

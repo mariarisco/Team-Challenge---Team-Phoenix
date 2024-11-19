@@ -7,3 +7,4 @@ tablero_barco = "O"
 tocado = "X"
 tablero_agua = " "
 agua = "-"
+valid_options = ["1","2","3","4","5"]
