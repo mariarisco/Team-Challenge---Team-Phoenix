@@ -3,6 +3,8 @@
 import numpy as np
 import random
 import keyboard  # Para capturar la tecla Esc
+import sys
+import os  # Para limpiar el terminal
 
 # importar variables-constantes
 from Hundir_la_flota_constantes import agua,tocado,coordenadas,tablero_agua,tablero_barco,tablero_dim
@@ -198,10 +200,8 @@ def verificar_victoria(jugador, maquina):
     return False
 
 # Función para manejar salida con Esc
-def verificar_salida():
-    if keyboard.is_pressed('esc'):
-        print("\nHas presionado 'Esc'. ¿Estás seguro de que deseas salir? (s/n)")
-        confirmar_salida = input("--> ").strip().lower()
-        if confirmar_salida == 's':
+def verificar_salida_2():
+    while True:
+        if keyboard.is_pressed("esc"):
             print("\nGracias por jugar. ¡Hasta la próxima! 😊")
-            exit()  # Sale del programa
+            os._exit(1)
